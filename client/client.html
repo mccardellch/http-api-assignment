@@ -7,6 +7,67 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.34/browser.min.js"></script>
   <script type="text/babel">
 
+    const handleResponse = (xhr) => {
+        const type = xhr.getResponseHeader('content-type');
+        
+        //get content section to write to
+        const content = document.querySelector('#content');
+        
+        const h1 = document.querySelector('#h1');
+        const p = document.querySelector('#p');
+        const pageSelect = document.querySelector('#page');
+        
+        let page = pageSelect.options[pageSelect.selectedIndex].innerHTML;
+        // gives you currently selected value
+        
+        if(type === 'application/json') {        
+            //parse the response text into a JSON object
+            const obj = JSON.parse(xhr.response);
+            
+            //add the json fields to our html elements
+            h1.textContent = page;
+            p.textContent = `Message: ${obj.message}`;
+            
+            console.log(obj);
+            
+        } else if (type === 'text/xml') {
+            const message = xhr.responseXML.querySelector('message').textContent;
+		
+		    //add the xml fields to our html elements
+            h1.textContent = page;
+            p.textContent = `Message: ${message}`;
+            
+            console.log(xhr.response);
+        }
+    };
+
+    const sendAjax = () => {
+        let pageSelect = document.querySelector('#page');
+        let typeSelect = document.querySelector('#type');
+        
+        let page = pageSelect.options[pageSelect.selectedIndex].value;
+        // gives you currently selected value
+        
+        let type = typeSelect.options[typeSelect.selectedIndex].value;
+        // gives you currently selected value
+        
+        const xhr = new XMLHttpRequest();
+        
+        xhr.open('GET', page);
+        xhr.setRequestHeader('Accept', type); //type - json or xml
+        
+        xhr.onload = () => handleResponse(xhr);
+        
+        xhr.send();
+    };
+
+    const init = () => {
+        const button = document.querySelector("#send");        
+        button.addEventListener('click', sendAjax);
+    }
+
+    window.onload = init;
+
   </script>
 </head>
 <body>
@@ -28,6 +89,8 @@
     <button id="send">Send</button>
   </section>
   <section id="content">
+      <h1 id='h1'></h1>
+      <p id='p'></p>
   </section>
 </body>
 </html>

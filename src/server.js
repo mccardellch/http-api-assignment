@@ -8,13 +8,14 @@ const port = process.env.PORT || process.env.NODE_PORT || 3000;
 
 const urlStruct = {
   '/': responseHandler.getIndex,
+  '/style.css': responseHandler.getStyles,
   '/success': responseHandler.success,
   '/badRequest': responseHandler.badRequest,
   '/unauthorized': responseHandler.unauthorized,
   '/forbidden': responseHandler.forbidden,
   '/internal': responseHandler.internal,
   '/notImplemented': responseHandler.notImplemented,
-  notFound: responseHandler.notFound,
+  notFound: responseHandler.notFound
 };
 
 // start server and listen for HTTP traffic
@@ -25,7 +26,7 @@ const onRequest = (request, response) => {
   const acceptedTypes = request.headers.accept.split(',');
 
   if (urlStruct[parsedURL.pathname]) {
-    urlStruct[parsedURL.pathname](request, response, params);
+    urlStruct[parsedURL.pathname](request, response, acceptedTypes, params);
     // call the function attached to this key
   } else {
     urlStruct.notFound(request, response, params);
