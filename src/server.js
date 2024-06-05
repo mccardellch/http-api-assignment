@@ -15,7 +15,7 @@ const urlStruct = {
   '/forbidden': responseHandler.forbidden,
   '/internal': responseHandler.internal,
   '/notImplemented': responseHandler.notImplemented,
-  notFound: responseHandler.notFound
+  '/notFound': responseHandler.notFound
 };
 
 // start server and listen for HTTP traffic
